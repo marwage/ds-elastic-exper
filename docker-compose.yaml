@@ -1,0 +1,54 @@
+---
+version: '2'
+networks:
+  deepspeed:
+    driver: bridge
+services:
+  worker-0:
+    hostname: worker-0
+    image: kungfu.azurecr.io/mw-deepspeed-baseline:latest
+    command: ./entrypoint-controller.sh
+    networks: [deepspeed]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+  worker-1:
+    hostname: worker-1
+    image: kungfu.azurecr.io/mw-deepspeed-baseline:latest
+    command: ./entrypoint-worker.sh
+    networks: [deepspeed]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']
+              capabilities: [gpu]
+  worker-2:
+    hostname: worker-2
+    image: kungfu.azurecr.io/mw-deepspeed-baseline:latest
+    command: ./entrypoint-add.sh
+    networks: [deepspeed]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['2']
+              capabilities: [gpu]
+  worker-3:
+    hostname: worker-3
+    image: kungfu.azurecr.io/mw-deepspeed-baseline:latest
+    command: ./entrypoint-worker.sh
+    networks: [deepspeed]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
